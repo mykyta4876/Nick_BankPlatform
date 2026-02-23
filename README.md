@@ -34,12 +34,16 @@ Nick_BankPlatform/
 ```
 
 ## Quick Start (Local)
+sudo apt update
+sudo apt install python3.11 python3.11-venv python3.11-dev git npm
+
+git clone https://github.com/mykyta4876/Nick_BankPlatform.git
 
 ### 1. Backend
 
 ```bash
 cd backend
-python -m venv venv
+python3 -m venv venv
 # Windows:
 venv\Scripts\activate
 # Mac/Linux:
