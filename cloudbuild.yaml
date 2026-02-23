@@ -1,0 +1,49 @@
+# GCP Cloud Build configuration for Nick Bank Platform
+# Deploy: gcloud builds submit --config cloudbuild.yaml
+
+steps:
+  # Build Backend
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/nick-bank-backend:$COMMIT_SHA', './backend']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/nick-bank-backend:$COMMIT_SHA']
+
+  # Build Frontend (with backend URL - update for your domain)
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/nick-bank-frontend:$COMMIT_SHA', './frontend']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/nick-bank-frontend:$COMMIT_SHA']
+
+  # Deploy to Cloud Run (Backend)
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'nick-bank-backend'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/nick-bank-backend:$COMMIT_SHA'
+      - '--region'
+      - 'us-central1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+
+  # Deploy to Cloud Run (Frontend)
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'nick-bank-frontend'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/nick-bank-frontend:$COMMIT_SHA'
+      - '--region'
+      - 'us-central1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+
+images:
+  - 'gcr.io/$PROJECT_ID/nick-bank-backend:$COMMIT_SHA'
+  - 'gcr.io/$PROJECT_ID/nick-bank-frontend:$COMMIT_SHA'
