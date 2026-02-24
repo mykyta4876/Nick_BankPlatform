@@ -77,6 +77,35 @@ docker-compose up --build
 - Frontend: http://localhost
 - Backend: http://localhost:8000
 
+
+gcloud compute ssh instance-20260223-022841 \
+  --project windmill1 \
+  --zone us-central1-c \
+  -- -L 8000:127.0.0.1:8000
+
+curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImV4cCI6MTc3MjAwNTcwNX0.EbYP2zbmLoOTEXDab_zqI2GwjJ0Ap340AYMoq26Fk8U" \
+  http://127.0.0.1:8000/api/auth/me
+
+
+curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImV4cCI6MTc3MjAwNTcwNX0.EbYP2zbmLoOTEXDab_zqI2GwjJ0Ap340AYMoq26Fk8U" \
+  http://127.0.0.1:8000/api/wallets/me
+
+
+python - << 'PY'
+from jose import jwt
+
+token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImV4cCI6MTc3MjAwNTcwNX0.EbYP2zbmLoOTEXDab_zqI2GwjJ0Ap340AYMoq26Fk8U"  # paste full eyJhbGciOi... string here
+
+secret = "your-secret-key-change-in-production-use-openssl-rand-hex-32"
+algo = "HS256"
+
+try:
+    payload = jwt.decode(token, secret, algorithms=[algo])
+    print("DECODED:", payload)
+except Exception as e:
+    print("DECODE ERROR:", repr(e))
+PY
+
 ## User Roles
 
 - **Customer:** Wallet, deposits, withdrawals, line of credit (default $5,000 limit)

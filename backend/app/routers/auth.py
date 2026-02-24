@@ -42,7 +42,7 @@ def register(user_data: UserCreate, db: Session = Depends(get_db)):
     
     db.commit()
     
-    access_token = create_access_token(data={"sub": user.id})
+    access_token = create_access_token(data={"sub": str(user.id)})
     return Token(
         access_token=access_token,
         user=UserResponse.model_validate(user)
@@ -58,7 +58,7 @@ def login(credentials: UserLogin, db: Session = Depends(get_db)):
     if not user.is_active:
         raise HTTPException(status_code=400, detail="Account is inactive")
     
-    access_token = create_access_token(data={"sub": user.id})
+    access_token = create_access_token(data={"sub": str(user.id)})
     return Token(
         access_token=access_token,
         user=UserResponse.model_validate(user)
