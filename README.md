@@ -39,6 +39,9 @@ sudo apt install python3.11 python3.11-venv python3.11-dev git npm
 
 git clone https://github.com/mykyta4876/Nick_BankPlatform.git
 
+# Getting updated code
+git pull origin main
+
 ### 1. Backend
 
 ```bash
@@ -60,7 +63,7 @@ Backend runs at http://localhost:8000. API docs: http://localhost:8000/docs
 ```bash
 cd frontend
 npm install
-npm run dev
+sudo npm run dev
 ```
 
 Frontend runs at http://localhost:5173 with proxy to backend.
